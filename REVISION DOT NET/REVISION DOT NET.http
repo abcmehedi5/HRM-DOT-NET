@@ -1,0 +1,6 @@
+@REVISION_DOT_NET_HostAddress = http://localhost:5285
+
+GET {{REVISION_DOT_NET_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
