@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using REVISION_DOT_NET.Data;
 using REVISION_DOT_NET.DTO;
 using REVISION_DOT_NET.Model;
@@ -19,14 +20,13 @@ namespace REVISION_DOT_NET.Controllers.Employee
         }
         //Get All Employees 
         [HttpGet]
-        public ResponseDto getEmployee ()
+        public ResponseDto GetEmployee ()
         {
 
             try
             {
                 //IEnumerable<EmployeeModel> employees= _context.Employees.ToList();
                 var employees = _context.Employees.ToList();
-                Console.WriteLine("workingssss",employees);
                 _responseDto.Result = employees;
                 _responseDto.Message = "Employee getting successfull";
 
@@ -98,5 +98,46 @@ namespace REVISION_DOT_NET.Controllers.Employee
 
             return _responseDto;
         }
+
+        // Delete Employee
+        [HttpDelete]
+        [Route("{Id:int}")]
+        public async Task<IActionResult> DeleteEmployee(int Id)
+        {
+            try
+            {
+                // Find the employee by ID
+                EmployeeModel employee = await _context.Employees.FirstOrDefaultAsync(x => x.Id == Id);
+
+                // Check if the employee exists
+                if (employee == null)
+                {
+                    _responseDto.IsSuccess = false;
+                    _responseDto.Message = "Employee not found";
+                    return NotFound(_responseDto);
+                }
+
+                // Remove the employee
+                _context.Employees.Remove(employee);
+                await _context.SaveChangesAsync();
+
+                // Set response DTO
+                _responseDto.IsSuccess = true;
+                _responseDto.Result = employee;
+                _responseDto.Message = "Employee deleted successfully";
+
+                // Return a successful response
+                return Ok(_responseDto);
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions
+                _responseDto.IsSuccess = false;
+                _responseDto.Message = $"An error occurred: {ex.Message}";
+                // Log exception here if necessary
+                return StatusCode(500, _responseDto);
+            }
+        }
+
     }
 }
