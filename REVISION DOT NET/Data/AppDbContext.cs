@@ -7,6 +7,7 @@ namespace REVISION_DOT_NET.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
         public DbSet<EmployeeModel> Employees { get; set; }
+        public DbSet<LeaveModel> Leaves { get; set; }
 
     }
 }
