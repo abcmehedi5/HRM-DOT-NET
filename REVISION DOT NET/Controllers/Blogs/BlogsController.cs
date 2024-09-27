@@ -77,6 +77,29 @@ namespace REVISION_DOT_NET.Controllers.Blogs
 
         }
 
+        [HttpGet]
+        [Route("{id:int}")]
+        public async Task<ResponseDto> GetSingleBlog(int id)
+        {
+            try
+            {
+                var data = await _context.Blogs.FirstAsync(e => e.Id == id);
+                if (data == null)
+                {
+                    _responseDto.IsSuccess = false;
+                    _responseDto.Message = "Data not found";
 
+                }
+                _responseDto.Result = data;
+                _responseDto.IsSuccess = true;
+                _responseDto.Message = "Data getting successfull";
+            }
+            catch (Exception ex) 
+            { 
+                _responseDto.Message= ex.Message;
+                _responseDto.IsSuccess= false; 
+            }
+            return _responseDto;
+        }
     }
 }
