@@ -47,5 +47,7 @@ namespace REVISION_DOT_NET.Model
         public string Nationality { get; set; } = string.Empty;
 
         public string MaritalStatus { get; set; } = string.Empty;
+
+        public ICollection<LeaveModel> Leaves { get; set; } = new List<LeaveModel>();
     }
 }

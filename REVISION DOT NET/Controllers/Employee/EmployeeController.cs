@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using REVISION_DOT_NET.Data;
-using REVISION_DOT_NET.DTO;
 using REVISION_DOT_NET.Model;
+using REVISION_DOT_NET.Model.DTO;
 
 namespace REVISION_DOT_NET.Controllers.Employee
 {
@@ -14,13 +14,13 @@ namespace REVISION_DOT_NET.Controllers.Employee
         private readonly AppDbContext _context;
         private ResponseDto _responseDto;
         public EmployeeController(AppDbContext context)
-        { 
+        {
             _context = context;
             _responseDto = new ResponseDto();
         }
         //Get All Employees 
         [HttpGet]
-        public ResponseDto GetEmployee ()
+        public ResponseDto GetEmployee()
         {
 
             try
@@ -99,10 +99,10 @@ namespace REVISION_DOT_NET.Controllers.Employee
             return _responseDto;
         }
 
-        // Delete Employee
+        // Delete: api/Employee/{Id}
         [HttpDelete]
         [Route("{Id:int}")]
-        public async Task<IActionResult> DeleteEmployee(int Id)
+        public async Task<ResponseDto> DeleteEmployee(int Id)
         {
             try
             {
@@ -114,7 +114,7 @@ namespace REVISION_DOT_NET.Controllers.Employee
                 {
                     _responseDto.IsSuccess = false;
                     _responseDto.Message = "Employee not found";
-                    return NotFound(_responseDto);
+                    return _responseDto;
                 }
 
                 // Remove the employee
@@ -127,7 +127,7 @@ namespace REVISION_DOT_NET.Controllers.Employee
                 _responseDto.Message = "Employee deleted successfully";
 
                 // Return a successful response
-                return Ok(_responseDto);
+                return _responseDto;
             }
             catch (Exception ex)
             {
@@ -135,8 +135,39 @@ namespace REVISION_DOT_NET.Controllers.Employee
                 _responseDto.IsSuccess = false;
                 _responseDto.Message = $"An error occurred: {ex.Message}";
                 // Log exception here if necessary
-                return StatusCode(500, _responseDto);
+                return _responseDto;
             }
+        }
+
+        //Get Single Employee Data
+        [HttpGet]
+        [Route("{Id:int}")]
+        public async Task<ResponseDto> GetSingleEmployee(int Id)
+        {
+            try
+            {
+                var singleEmployee = await _context.Employees.FirstOrDefaultAsync(e => e.Id == Id);  
+                if (singleEmployee == null)
+                {
+                    _responseDto.IsSuccess = false;
+                    _responseDto.Message = "Data not found";
+
+                }
+                else
+                {
+                    _responseDto.IsSuccess =true;
+                    _responseDto.Result= singleEmployee;
+                    _responseDto.Message = "Data getting successfull";
+
+                }
+         
+ 
+            } catch (Exception ex)
+            {
+                _responseDto.IsSuccess = false;
+                _responseDto.Message = ex.Message;
+            }
+            return _responseDto; // Return the responseDto outside the try-catch
         }
 
     }
