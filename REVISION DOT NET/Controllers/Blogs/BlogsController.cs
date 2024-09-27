@@ -27,7 +27,7 @@ namespace REVISION_DOT_NET.Controllers.Blogs
                 var skip = (page - 1) * pageSize;
                 var blogs = await _context.Blogs.Skip(skip).Take(pageSize).ToListAsync();
 
-                // Map Blogs entity to BlogsDto
+                // Map Blogs entity to Blogs Dto
                 var blogDtos = blogs.Select(blog => new BlogsDto
                 {
                     Id = blog.Id,
@@ -35,7 +35,15 @@ namespace REVISION_DOT_NET.Controllers.Blogs
                     Description = blog.Description
                 }).ToList();
 
-                _responseDto.Result = blogDtos;
+                // Count total blog
+                var totalCount = await _context.Blogs.CountAsync();
+                _responseDto.Result = new
+                {
+                    TotalCount = totalCount,
+                    TotalPage = (int)Math.Ceiling((double)totalCount / pageSize),
+                    Blogs = blogDtos,
+                };
+
                 _responseDto.IsSuccess = true;
                 _responseDto.Message = "Data retrieval successful";
             }
