@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using REVISION_DOT_NET.Data;
-using REVISION_DOT_NET.DTO;
 using REVISION_DOT_NET.Model;
+using REVISION_DOT_NET.Model.DTO;
 
 namespace REVISION_DOT_NET.Controllers.Employee
 {

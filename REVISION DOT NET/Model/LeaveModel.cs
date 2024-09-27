@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace REVISION_DOT_NET.Model
 {
@@ -41,5 +42,8 @@ namespace REVISION_DOT_NET.Model
 
         [MaxLength(250)]
         public string Remarks { get; set; } = string.Empty;
+
+        [ForeignKey("EmployeeId")]
+        public EmployeeModel? Employee { get; set; } 
     }
 }

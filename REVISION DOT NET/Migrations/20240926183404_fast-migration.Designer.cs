@@ -12,8 +12,8 @@ using REVISION_DOT_NET.Data;
 namespace REVISION_DOT_NET.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240906164415_addedleavetable")]
-    partial class addedleavetable
+    [Migration("20240926183404_fast-migration")]
+    partial class fastmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,33 @@ namespace REVISION_DOT_NET.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("REVISION_DOT_NET.Model.Domain.Blogs.BlogModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Blogs");
+                });
 
             modelBuilder.Entity("REVISION_DOT_NET.Model.EmployeeModel", b =>
                 {
@@ -134,7 +161,8 @@ namespace REVISION_DOT_NET.Migrations
 
                     b.Property<string>("LeaveName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("LeaveStatus")
                         .IsRequired()
@@ -161,7 +189,25 @@ namespace REVISION_DOT_NET.Migrations
 
                     b.HasKey("LeaveId");
 
+                    b.HasIndex("EmployeeId");
+
                     b.ToTable("Leaves");
+                });
+
+            modelBuilder.Entity("REVISION_DOT_NET.Model.LeaveModel", b =>
+                {
+                    b.HasOne("REVISION_DOT_NET.Model.EmployeeModel", "Employee")
+                        .WithMany("Leaves")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("REVISION_DOT_NET.Model.EmployeeModel", b =>
+                {
+                    b.Navigation("Leaves");
                 });
 #pragma warning restore 612, 618
         }

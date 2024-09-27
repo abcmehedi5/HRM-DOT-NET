@@ -1,4 +1,4 @@
-﻿namespace REVISION_DOT_NET.DTO
+﻿namespace REVISION_DOT_NET.Model.DTO
 {
     public class ResponseDto
     {
