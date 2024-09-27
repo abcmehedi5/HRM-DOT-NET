@@ -20,11 +20,12 @@ namespace REVISION_DOT_NET.Controllers.Blogs
         }
         // Get Blogs
         [HttpGet]
-        public async Task<ResponseDto> GetBlog()
+        public async Task<ResponseDto> GetBlog(int page= 1, int pageSize = 10)
         {
             try
             {
-                var blogs = await _context.Blogs.ToListAsync();
+                var skip = (page - 1) * pageSize;
+                var blogs = await _context.Blogs.Skip(skip).Take(pageSize).ToListAsync();
 
                 // Map Blogs entity to BlogsDto
                 var blogDtos = blogs.Select(blog => new BlogsDto
