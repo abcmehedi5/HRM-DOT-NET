@@ -12,12 +12,16 @@ namespace REVISION_DOT_NET.Controllers.Blogs
     {
         private readonly AppDbContext _context;
         private readonly ResponseDto _responseDto;
+        //Constructor
         public BlogsController(AppDbContext context)
         {
             _context = context;
             _responseDto = new ResponseDto();
 
         }
+        /// <summary>
+        /// Get all blog datas.
+        /// </summary>
         // Get Blogs
         [HttpGet]
         public async Task<ResponseDto> GetBlog(int page= 1, int pageSize = 10)
@@ -55,7 +59,7 @@ namespace REVISION_DOT_NET.Controllers.Blogs
 
             return _responseDto;
         }
-
+        // Post new blog
         [HttpPost]
         public  async Task<ResponseDto> PostBlog([FromBody] BlogModel blogData)
         {
@@ -85,7 +89,7 @@ namespace REVISION_DOT_NET.Controllers.Blogs
 
 
         }
-
+        // Get single blog
         [HttpGet]
         [Route("{id:int}")]
         public async Task<ResponseDto> GetSingleBlog(int id)
