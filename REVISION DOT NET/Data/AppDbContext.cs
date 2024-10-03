@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using REVISION_DOT_NET.Model;
 using REVISION_DOT_NET.Model.Domain.Blogs;
+using REVISION_DOT_NET.Model.Domain.Jobs;
 
 namespace REVISION_DOT_NET.Data
 {
@@ -10,6 +11,7 @@ namespace REVISION_DOT_NET.Data
         public DbSet<EmployeeModel> Employees { get; set; }
         public DbSet<LeaveModel> Leaves { get; set; }
         public DbSet<BlogModel> Blogs { get; set; }
+        public DbSet<JobModel> Job { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

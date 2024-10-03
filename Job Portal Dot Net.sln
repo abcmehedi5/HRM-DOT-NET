@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35219.272
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REVISION DOT NET", "REVISION DOT NET\REVISION DOT NET.csproj", "{10EEAE53-A2AD-40A1-A549-B6B1A9E59343}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Job Portal Dot Net", "REVISION DOT NET\Job Portal Dot Net.csproj", "{10EEAE53-A2AD-40A1-A549-B6B1A9E59343}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
