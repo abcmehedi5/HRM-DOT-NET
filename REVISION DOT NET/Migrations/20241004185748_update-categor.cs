@@ -5,7 +5,7 @@
 namespace REVISION_DOT_NET.Migrations
 {
     /// <inheritdoc />
-    public partial class twmigr : Migration
+    public partial class updatecategor : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

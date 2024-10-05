@@ -22,22 +22,26 @@ namespace REVISION_DOT_NET.Controllers.Jobs
         }
         // Post a new jobs
         [HttpPost]
-        public async Task<ActionResult<ResponseDto>> PostJobs([FromBody] JobModel jobData)
+        public async Task<ActionResult<ResponseDto>> PostJobs([FromBody] JobDto jobData)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState); // Return validation errors if any
+            }
             try
             {
                 var job = new JobModel
                 {
                     title = jobData.title,
                     description = jobData.description,
-                    category_id = jobData.category_id,
+                    categoryId = jobData.category_id,
                     company_id = jobData.company_id,
                     thumbnail = jobData.thumbnail,
                     location_id = jobData.location_id,
                     posted_by_id = jobData.posted_by_id,
                 };
 
-                await _context.Job.AddAsync(job);
+                await _context.Jobs.AddAsync(job);
                 await _context.SaveChangesAsync();
 
                 _responseDto.Message = "Job posted successfully";
@@ -62,7 +66,21 @@ namespace REVISION_DOT_NET.Controllers.Jobs
             try
             {
                 var skip = (page - 1) * pageSize;
-                var jobs = await _context.Job.Skip(skip).Take(pageSize).ToListAsync();
+                //var jobs = await _context.Jobs.Skip(skip).Take(pageSize).ToListAsync();
+                var jobs = await (from j in _context.Jobs
+                                  join c in _context.Categories on j.categoryId equals c.categoryId
+                                  select new 
+                                  {
+                                    j.Job_id,
+                                    j.location_id,
+                                    j.posted_by_id,
+                                    j.categoryId,
+                                    j.thumbnail,
+                                    j.title,
+                                    c.categoryName,
+                                    c.slug
+                                  }
+                                  ).ToListAsync();
                 _responseDto.Message = "Job getting successfull";
                 _responseDto.IsSuccess = true;
                 _responseDto.Result = jobs;

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using REVISION_DOT_NET.Model;
 using REVISION_DOT_NET.Model.Domain.Blogs;
+using REVISION_DOT_NET.Model.Domain.Category;
 using REVISION_DOT_NET.Model.Domain.Jobs;
 
 namespace REVISION_DOT_NET.Data
@@ -11,22 +12,18 @@ namespace REVISION_DOT_NET.Data
         public DbSet<EmployeeModel> Employees { get; set; }
         public DbSet<LeaveModel> Leaves { get; set; }
         public DbSet<BlogModel> Blogs { get; set; }
-        public DbSet<JobModel> Job { get; set; }
+        public DbSet<JobModel> Jobs { get; set; }
+        public DbSet<CategoryModel> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Configuring the one-to-many relationship between Employee and Leave
-            modelBuilder.Entity<EmployeeModel>()
-                .HasMany(e => e.Leaves) // Each Employee has many Leaves
-                .WithOne(l => l.Employee) // Each Leave has one Employee
-                .HasForeignKey(l => l.EmployeeId) // Foreign key in LeaveModel pointing to EmployeeModel
-                .OnDelete(DeleteBehavior.Cascade); // Optional: cascade delete behavior
+            // Configure one-to-many relationship between CategoryModel and JobModel
+            modelBuilder.Entity<JobModel>()
+                .HasOne(j => j.Category)  // JobModel has one Category
+                .WithMany(c => c.Jobs)    // CategoryModel has many Jobs
+                .HasForeignKey(j => j.categoryId);  // Use category_id as foreign key
 
-            // Optionally, you can further configure the LeaveModel properties
-            modelBuilder.Entity<LeaveModel>()
-                .Property(l => l.LeaveName)
-                .IsRequired()
-                .HasMaxLength(100);
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

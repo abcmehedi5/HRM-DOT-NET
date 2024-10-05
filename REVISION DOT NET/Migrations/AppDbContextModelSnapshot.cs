@@ -49,6 +49,33 @@ namespace REVISION_DOT_NET.Migrations
                     b.ToTable("Blogs");
                 });
 
+            modelBuilder.Entity("REVISION_DOT_NET.Model.Domain.Category.CategoryModel", b =>
+                {
+                    b.Property<int>("categoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("categoryId"));
+
+                    b.Property<string>("categoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("createdAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("slug")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("updateAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("categoryId");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("REVISION_DOT_NET.Model.Domain.Jobs.JobModel", b =>
                 {
                     b.Property<int>("Job_id")
@@ -57,7 +84,7 @@ namespace REVISION_DOT_NET.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Job_id"));
 
-                    b.Property<int>("category_id")
+                    b.Property<int>("categoryId")
                         .HasColumnType("int");
 
                     b.Property<int>("company_id")
@@ -90,7 +117,9 @@ namespace REVISION_DOT_NET.Migrations
 
                     b.HasKey("Job_id");
 
-                    b.ToTable("Job");
+                    b.HasIndex("categoryId");
+
+                    b.ToTable("Jobs");
                 });
 
             modelBuilder.Entity("REVISION_DOT_NET.Model.EmployeeModel", b =>
@@ -202,8 +231,7 @@ namespace REVISION_DOT_NET.Migrations
 
                     b.Property<string>("LeaveName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LeaveStatus")
                         .IsRequired()
@@ -235,6 +263,17 @@ namespace REVISION_DOT_NET.Migrations
                     b.ToTable("Leaves");
                 });
 
+            modelBuilder.Entity("REVISION_DOT_NET.Model.Domain.Jobs.JobModel", b =>
+                {
+                    b.HasOne("REVISION_DOT_NET.Model.Domain.Category.CategoryModel", "Category")
+                        .WithMany("Jobs")
+                        .HasForeignKey("categoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
             modelBuilder.Entity("REVISION_DOT_NET.Model.LeaveModel", b =>
                 {
                     b.HasOne("REVISION_DOT_NET.Model.EmployeeModel", "Employee")
@@ -244,6 +283,11 @@ namespace REVISION_DOT_NET.Migrations
                         .IsRequired();
 
                     b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("REVISION_DOT_NET.Model.Domain.Category.CategoryModel", b =>
+                {
+                    b.Navigation("Jobs");
                 });
 
             modelBuilder.Entity("REVISION_DOT_NET.Model.EmployeeModel", b =>

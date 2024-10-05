@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace REVISION_DOT_NET.Migrations
 {
     /// <inheritdoc />
-    public partial class fastmigration : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,6 +25,22 @@ namespace REVISION_DOT_NET.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Blogs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    categoryId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    categoryName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    slug = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    createdAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    updateAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.categoryId);
                 });
 
             migrationBuilder.CreateTable(
@@ -60,12 +76,39 @@ namespace REVISION_DOT_NET.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Jobs",
+                columns: table => new
+                {
+                    Job_id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    category_id = table.Column<int>(type: "int", nullable: false),
+                    posted_by_id = table.Column<int>(type: "int", nullable: false),
+                    location_id = table.Column<int>(type: "int", nullable: false),
+                    company_id = table.Column<int>(type: "int", nullable: false),
+                    thumbnail = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    createdAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    updatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Jobs", x => x.Job_id);
+                    table.ForeignKey(
+                        name: "FK_Jobs_Categories_category_id",
+                        column: x => x.category_id,
+                        principalTable: "Categories",
+                        principalColumn: "categoryId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Leaves",
                 columns: table => new
                 {
                     LeaveId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    LeaveName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    LeaveName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EmployeeId = table.Column<int>(type: "int", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -88,6 +131,11 @@ namespace REVISION_DOT_NET.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Jobs_category_id",
+                table: "Jobs",
+                column: "category_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Leaves_EmployeeId",
                 table: "Leaves",
                 column: "EmployeeId");
@@ -100,7 +148,13 @@ namespace REVISION_DOT_NET.Migrations
                 name: "Blogs");
 
             migrationBuilder.DropTable(
+                name: "Jobs");
+
+            migrationBuilder.DropTable(
                 name: "Leaves");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "Employees");
